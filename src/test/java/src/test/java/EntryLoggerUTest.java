@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 import src.main.java.EntryLogger;
-
+        
 public class EntryLoggerUTest {
 
 
@@ -56,7 +56,17 @@ public class EntryLoggerUTest {
       }
     } catch (TimeoutException tex) {
       // short-circuit in the event of a ConcurrentModificationException
+      //Throw the exception to fail the test
+      throw tex;
     }
+    
+    //Check if the number of logs is correct
+    
+    int expectedLogsNumber = numThreads * numBatches * messagesPerBatch;
+    if (logger.getNumberOfLogs() != expectedLogsNumber) {
+      throw new RuntimeException(String.format("%d logs of %d expected!", logger.getNumberOfLogs(), expectedLogsNumber));
+    }
+    
     e.shutdown();
   }
 
@@ -74,6 +84,3 @@ public class EntryLoggerUTest {
     }
   }
 }
-
-
-
